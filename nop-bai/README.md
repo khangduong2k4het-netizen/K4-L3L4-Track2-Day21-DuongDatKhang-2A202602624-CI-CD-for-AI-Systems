@@ -11,11 +11,11 @@ MSSV **2A202602624**, khóa **K4**. Repository: [GitHub public](https://github.c
 - [x] Run mô hình yếu chứng minh F1 dưới 0.65 chặn Release.
 - [x] EC2 trả GET /healthz và POST /score đúng qua IP công khai.
 - [x] Bước 3: commit chỉ thay DVC pointer, event push, bốn jobs xanh.
-- [x] Báo cáo đủ 4 mục, 517 từ theo cách đếm tách khoảng trắng, không còn chú thích HTML.
+- [x] Báo cáo đủ 4 mục, 516 từ theo cách đếm tách khoảng trắng, không còn chú thích HTML.
 - [x] Các ảnh bằng chứng hiện có đều dưới 1 MB.
 - [x] Thư mục `nop-bai/` và mã nguồn đã đẩy lên repository public.
-- [ ] Chụp bổ sung thanh địa chỉ thật và cửa sổ terminal theo quy ước ảnh.
-- [ ] Nộp URL repository vào đúng bài Day 21 trên VLearn.
+- [x] Ảnh trình duyệt có thanh địa chỉ thật; ảnh 04 chụp cửa sổ terminal thật.
+- [ ] Sinh viên tự nộp URL repository vào đúng bài Day 21 trên VLearn.
 
 ## Kết quả thực tế
 
@@ -41,14 +41,21 @@ Commit dữ liệu: [9443ae8d](https://github.com/khangduong2k4het-netizen/K4-L3
 - Pipeline dùng GitHub OIDC, triển khai SSM; API tải model bằng instance role.
 - Model chỉ được xuất bản sau Quality Gate. Không thực hiện bonus.
 
-## Giới hạn ảnh và việc còn lại
+## Cách chụp ảnh và trạng thái EC2
 
-Ảnh 01/02/03/05/07 chụp trang web thật bằng Playwright nhưng không chứa thanh địa chỉ
-trình duyệt. Công cụ chụp cửa sổ Windows không kết nối được native pipe (OS error 2),
-nên chưa đáp ứng quy ước chụp cả URL. Ảnh 04 là bản hiển thị transcript của lệnh curl
-chạy thật, **không phải ảnh cửa sổ terminal**; file api-test.txt giữ lệnh, phản hồi và exit code.
-Cần chụp bổ sung hai chi tiết này nếu người chấm yêu cầu đúng hình thức trong
-[quy định ảnh](anh-chup-man-hinh/README.md). Không ghép thanh địa chỉ hoặc giả giao diện terminal.
+Ảnh 01/02/03/05/07 được chụp trực tiếp từ cửa sổ Chromium bằng Playwright +
+ImageGrab, gồm thanh URL thật. Không ghép thanh địa chỉ hay dựng lại giao diện.
+Ảnh 04 chụp cửa sổ PowerShell thật hiển thị bản ghi curl trong [api-test.txt](api-test.txt),
+đã chạy lúc 17:41 ngày 07/10/2026, trước khi dừng EC2. Cả /healthz và /score đều thành
+công với exit code 0. Cửa sổ ghi rõ đây là kết quả đã lưu, không gọi API sau khi dừng máy.
 
 EC2 đã được tạm dừng (stopped) sau khi kiểm tra xong để tiết kiệm AWS credit (chi tiết trong [ec2-status.json](ec2-status.json)).
-Có thể start lại khi cần kiểm tra API thực tế và dọn tài nguyên sau khi chấm bài.
+IP công khai cũ `18.142.137.123` đã được giải phóng; API hiện tạm ngừng phục vụ.
+EC2 stopped không còn phí compute, nhưng ổ EBS vẫn được giữ và có chi phí lưu trữ
+([AWS StopInstances](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_StopInstances.html)).
+Bucket S3 và model cũng được giữ; chi phí lưu trữ S3 vẫn có thể phát sinh
+([S3 pricing](https://aws.amazon.com/s3/pricing/)).
+Khi cần kiểm tra API để chấm bài, start lại EC2 và cập nhật secret `SERVER_HOST` theo
+Public IPv4 mới trước khi chạy Release
+([AWS IP addressing](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html)).
+Phần nộp VLearn do sinh viên tự thực hiện; chưa có thao tác nộp bài từ trợ lý.

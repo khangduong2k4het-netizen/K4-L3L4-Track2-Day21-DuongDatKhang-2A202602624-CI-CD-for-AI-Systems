@@ -94,8 +94,11 @@
     "api_base_url_is_historical": true
   },
   "evidence_limitations": [
-    "Playwright page screenshots omit the browser address bar.",
-    "04-curl-api.png renders the real curl transcript; it is not a native terminal window screenshot."
+    "API evidence records successful calls before EC2 was stopped; the API is currently offline."
   ],
-  "vlearn_submitted": false
+  "vlearn_submitted": false,
+  "image_capture": {
+    "browser": "Real Chromium windows captured with Playwright and ImageGrab, including address bars.",
+    "terminal": "Real PowerShell window showing the saved successful curl transcript from before EC2 stop."
+  }
 }
