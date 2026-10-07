@@ -8,6 +8,11 @@ data/train_batch2.csv
 sa-key.json
 .env
 .venv/
+.venv311/
+.venv-playwright/
+.secrets/
+*.pem
+*.key
 __pycache__/
 *.pyc
 .DS_Store

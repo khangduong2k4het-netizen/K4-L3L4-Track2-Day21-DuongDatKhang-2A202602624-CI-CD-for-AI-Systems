@@ -5,6 +5,7 @@ import yaml
 import json
 import joblib
 import os
+from pathlib import Path
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
@@ -31,58 +32,48 @@ def train(
         f1 (float): diem F1 cua lop duong (thu nhap > 50K) tren tap holdout.
     """
 
-    # TODO 1: Doc du lieu huan luyen va danh gia
-    # df_train = ...
-    # df_eval  = ...
+    df_train = pd.read_csv(data_path)
+    df_eval = pd.read_csv(eval_path)
+    X_train = df_train.drop(columns=["target"])
+    y_train = df_train["target"]
+    X_eval = df_eval.drop(columns=["target"])
+    y_eval = df_eval["target"]
 
-    # TODO 2: Tach dac trung (X) va nhan (y)
-    # X_train = df_train.drop(columns=["target"])
-    # y_train = ...
-    # X_eval  = ...
-    # y_eval  = ...
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
+    experiment_name = os.getenv("MLFLOW_EXPERIMENT_NAME", "adult-income")
+    experiment = mlflow.get_experiment_by_name(experiment_name)
+    if experiment is None:
+        artifact_root = os.getenv("MLFLOW_ARTIFACT_ROOT", "./mlartifacts")
+        if "://" not in artifact_root:
+            artifact_root = Path(artifact_root).resolve().as_uri()
+        mlflow.create_experiment(experiment_name, artifact_location=artifact_root)
+    mlflow.set_experiment(experiment_name)
 
     with mlflow.start_run():
 
-        # TODO 3: Ghi nhan cac sieu tham so
-        # mlflow.log_params(...)
+        mlflow.log_params(params)
+        model = GradientBoostingClassifier(**params, random_state=42)
+        model.fit(X_train, y_train)
 
-        # TODO 4: Khoi tao va huan luyen GradientBoostingClassifier
-        # Goi y: su dung random_state=42 de dam bao tinh tai tao
-        # model = GradientBoostingClassifier(...)
-        # model.fit(...)
+        preds = model.predict(X_eval)
+        # F1 cua lop duong (target = 1), khong lay trung binh giua cac lop.
+        f1 = float(f1_score(y_eval, preds))
+        acc = float(accuracy_score(y_eval, preds))
+        mlflow.log_metric("f1_score", f1)
+        mlflow.log_metric("accuracy", acc)
+        mlflow.sklearn.log_model(model, "model")
 
-        # TODO 5: Du doan tren tap holdout va tinh chi so
-        # Chu y: f1_score o day tinh cho LOP DUONG (target = 1), khong dung average.
-        # preds = ...
-        # f1    = f1_score(...)
-        # acc   = accuracy_score(...)
+        print(f"F1: {f1:.4f} | Accuracy: {acc:.4f}")
+        os.makedirs("outputs", exist_ok=True)
+        with open("outputs/report.json", "w", encoding="utf-8") as f:
+            json.dump({"f1_score": f1, "accuracy": acc}, f, indent=2)
+        os.makedirs("models", exist_ok=True)
+        joblib.dump(model, "models/model.joblib")
 
-        # TODO 6: Ghi nhan chi so vao MLflow
-        # mlflow.log_metric("f1_score", ...)
-        # mlflow.log_metric("accuracy", ...)
-        # mlflow.sklearn.log_model(model, "model")
-
-        # TODO 7: In ket qua ra man hinh
-        # print(f"F1: {f1:.4f} | Accuracy: {acc:.4f}")
-
-        # TODO 8: Luu metrics ra file outputs/report.json
-        # File nay duoc doc boi GitHub Actions o Buoc 2
-        # os.makedirs("outputs", exist_ok=True)
-        # with open("outputs/report.json", "w") as f:
-        #     json.dump({"f1_score": f1, "accuracy": acc}, f)
-
-        # TODO 9: Luu mo hinh ra file models/model.joblib
-        # File nay duoc upload len cloud storage o Buoc 2
-        # os.makedirs("models", exist_ok=True)
-        # joblib.dump(model, "models/model.joblib")
-
-        pass  # xoa dong nay sau khi hoan thanh tat ca TODO ben tren
-
-    # TODO 10: Tra ve f1
-    # return f1
+    return f1
 
 
 if __name__ == "__main__":
-    with open("params.yaml") as f:
+    with open("params.yaml", encoding="utf-8") as f:
         params = yaml.safe_load(f)
     train(params)
