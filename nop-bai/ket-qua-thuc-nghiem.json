@@ -1,0 +1,97 @@
+{
+  "student": {
+    "name": "Dương Đạt Khang",
+    "student_id": "2A202602624",
+    "course": "K4"
+  },
+  "verified_date": "2026-10-07",
+  "repository": "https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems",
+  "selected_params": {
+    "n_estimators": 200,
+    "learning_rate": 0.1,
+    "max_depth": 5
+  },
+  "local_mlflow": [
+    {
+      "run_id": "16b0c2a148914b18a55077039c97dce6",
+      "params": {
+        "n_estimators": "50",
+        "learning_rate": "0.05",
+        "max_depth": "2"
+      },
+      "metrics": {
+        "f1_score": 0.6051282051282051,
+        "accuracy": 0.846
+      }
+    },
+    {
+      "run_id": "a0708aadb77f4e5fa90ba9be50f104e9",
+      "params": {
+        "n_estimators": "100",
+        "learning_rate": "0.1",
+        "max_depth": "3"
+      },
+      "metrics": {
+        "f1_score": 0.7109004739336493,
+        "accuracy": 0.878
+      }
+    },
+    {
+      "run_id": "807ba6156694463aa3f955feb80f509b",
+      "params": {
+        "n_estimators": "200",
+        "learning_rate": "0.1",
+        "max_depth": "5"
+      },
+      "metrics": {
+        "f1_score": 0.7149321266968326,
+        "accuracy": 0.874
+      }
+    }
+  ],
+  "step2": {
+    "url": "https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems/actions/runs/37604919875",
+    "commit": "a9061419b7b2f3ad660ab528de328f8ad9c54fed",
+    "event": "workflow_dispatch",
+    "training_rows": 22361,
+    "report": {
+      "f1_score": 0.7149321266968326,
+      "accuracy": 0.874
+    }
+  },
+  "step3": {
+    "url": "https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems/actions/runs/37607774898",
+    "commit": "9443ae8dbf89a9b95e8fbb4e08e2d0fb594b8773",
+    "event": "push",
+    "changed_files": [
+      "data/train_batch1.csv.dvc"
+    ],
+    "training_rows": 44722,
+    "report": {
+      "f1_score": 0.7354260089686099,
+      "accuracy": 0.882
+    }
+  },
+  "blocked_release": {
+    "url": "https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems/actions/runs/37605388654",
+    "report": {
+      "f1_score": 0.6051282051282051,
+      "accuracy": 0.846
+    },
+    "release": "skipped"
+  },
+  "holdout_rows": 500,
+  "holdout_unchanged": true,
+  "aws": {
+    "region": "ap-southeast-1",
+    "instance_id": "i-0a9249b9b954a67f6",
+    "instance_type": "t3.small",
+    "bucket": "income-lab-406382424864-ap-southeast-1",
+    "api_base_url": "http://18.142.137.123:8080"
+  },
+  "evidence_limitations": [
+    "Playwright page screenshots omit the browser address bar.",
+    "04-curl-api.png renders the real curl transcript; it is not a native terminal window screenshot."
+  ],
+  "vlearn_submitted": false
+}

@@ -1,42 +1,34 @@
-# Báo Cáo Lab Day 21 - CI/CD cho AI Systems
+# Báo cáo Day 21 — CI/CD cho AI Systems
 
-| | |
-|---|---|
-| Họ và tên | Dương Đạt Khang |
-| MSSV | 2A202602624 |
-| Lớp / Khóa | K4 |
-| Repo GitHub | https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems |
-| Ngày nộp | Chưa nộp; kiểm tra ngày 07/10/2026 |
+Dương Đạt Khang · MSSV 2A202602624 · K4 · Kiểm tra 07/10/2026
 
-## 1. Bộ Siêu Tham Số Đã Chọn và Lý Do
+Repository: [GitHub public](https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems).
 
-| Lần chạy | n_estimators | learning_rate | max_depth | f1_score | accuracy |
-|---|---|---|---|---|---|
-| 1 | 100 | 0.1 | 3 | 0.7109 | 0.8780 |
-| 2 | 50 | 0.05 | 2 | 0.6051 | 0.8460 |
-| 3 | 200 | 0.1 | 5 | 0.7149 | 0.8740 |
+## 1. Bộ siêu tham số đã chọn và lý do
 
-**Bộ siêu tham số đã chọn:** `n_estimators=200`, `learning_rate=0.1`, `max_depth=5`.
+| n_estimators | learning_rate | max_depth | F1 | Accuracy |
+|---|---|---|---|---|
+| 100 | 0.1 | 3 | 0.7109 | 0.8780 |
+| 50 | 0.05 | 2 | 0.6051 | 0.8460 |
+| 200 | 0.1 | 5 | 0.7149 | 0.8740 |
 
-**Lý do:** Lần 3 đạt F1 cao nhất (0.7149), vượt ngưỡng 0.65. Lần 1 có accuracy cao hơn nhưng F1 thấp hơn, nên chọn theo accuracy sẽ bỏ qua cấu hình tốt nhất cho lớp thu nhập cao. Lần 2 giảm cả số cây, learning rate và độ sâu, chỉ đạt F1 0.6051. Learning rate nhỏ thường cần nhiều cây hơn để bù lại, nhưng lần này chỉ dùng 50 cây. Các tham số thay đổi đồng thời nên chưa tách riêng ảnh hưởng từng tham số. Ba lần dùng cùng 22.361 mẫu huấn luyện, 500 mẫu holdout, random_state=42. Model và report của lần 3 đã được lưu.
+Ba thí nghiệm MLflow dùng 22.361 mẫu huấn luyện, cùng 500 mẫu holdout và random_state=42. Chọn 200 cây, learning_rate=0.1, max_depth=5 trong params.yaml vì F1 cao nhất, vượt ngưỡng 0.65. Cấu hình 100 cây có accuracy cao hơn nhưng F1 thấp hơn. Cấu hình 50 cây vừa nông vừa có learning rate nhỏ, chưa đủ vòng boosting để sửa sai. Giảm learning rate thường cần tăng số cây; tăng độ sâu giúp học tương tác nhưng tăng chi phí và nguy cơ quá khớp. Vì ba tham số thay đổi đồng thời, chưa thể quy toàn bộ cải thiện cho riêng độ sâu.
 
-## 2. Vì Sao Ngưỡng Chất Lượng Đặt Trên F1 Chứ Không Phải Accuracy
+## 2. Vì sao Quality Gate dùng F1 thay vì Accuracy
 
-Adult có khoảng 24,8% mẫu thu nhập cao. Mô hình luôn dự đoán thu nhập thấp đạt accuracy 75,2% nhưng F1 lớp dương bằng 0. Accuracy tổng thể dễ che lấp việc bỏ sót lớp thiểu số. F1 kết hợp precision và recall của lớp dương, phản ánh cả dự đoán nhầm lẫn bỏ sót. Quality Gate dùng F1 từ 0.65; accuracy chỉ tham khảo. Mã gọi `f1_score(y_eval, preds)`, mặc định đánh giá target=1. Macro lấy trung bình hai lớp, còn weighted lấy trung bình theo số mẫu mỗi lớp. Cả hai không phải F1 riêng lớp dương nên không phù hợp với ngưỡng lab.
+Lớp thu nhập cao chiếm 24,8% holdout. Luôn dự đoán thu nhập thấp vẫn đạt accuracy 75,2%, nhưng F1 lớp dương bằng 0. F1 kết hợp precision và recall, giúp đánh giá cả dự đoán nhầm và bỏ sót lớp thiểu số. Mã gọi f1_score(y_eval, preds), chỉ đánh giá target=1. Macro trung bình hai lớp, weighted trung bình theo số mẫu; cả hai không phải F1 riêng lớp dương. Gate kiểm tra F1 hữu hạn từ 0.65; chỉ sau khi qua Gate, Release mới ghi model hiện hành lên S3. Run thử mô hình yếu đạt F1 0.6051: Gate thất bại và Release tự động bị bỏ qua, chứng minh ngưỡng hoạt động thật.
 
-## 3. Khó Khăn Gặp Phải và Cách Giải Quyết
+## 3. Khó khăn và cách giải quyết
 
-| Khó khăn | Nguyên nhân | Cách giải quyết |
-|---|---|---|
-| Cài dependency thất bại. | Python 3.13 thiếu wheel scikit-learn 1.4.2. | Dùng `.venv311` với Python 3.11.9. |
-| MLflow không mở SQLite. | SQLAlchemy 2.1 bỏ class MLflow 2.13 cần. | Giới hạn SQLAlchemy về 2.0; tests đã qua. |
-| Chưa triển khai AWS/Actions. | Chưa đăng nhập AWS/GitHub. | Đã cài CLI, chuẩn bị pipeline; còn chờ đăng nhập. |
+- Phụ thuộc: Python 3.13 không có wheel phù hợp với scikit-learn 1.4.2; tạo virtualenv Python 3.11.9 riêng. MLflow 2.13 lỗi với SQLAlchemy 2.1; giới hạn SQLAlchemy trong nhánh 2.0.
+- Kết nối: SSH từ máy cá nhân bị timeout; chuyển sang SSM với quyền giới hạn đúng EC2, GitHub xác thực OIDC và API dùng instance role. Không đưa private key lên GitHub.
+- Tự động hóa: commit ban đầu chưa tạo run dù workflow active; bật lại Actions ở cấp repository, sau đó xác nhận event=push bằng API và run thực tế.
 
-## 4. So Sánh Bước 2 và Bước 3
+## 4. So sánh Bước 2 và Bước 3
 
-| | f1_score | accuracy |
-|---|---|---|
-| Bước 2 (chỉ `train_batch1`) | Chưa có kết quả CI | Chưa có kết quả CI |
-| Bước 3 (thêm `train_batch2`) | Chưa chạy | Chưa chạy |
+| Bước | Mẫu train | F1 | Accuracy |
+|---|---|---|---|
+| [2](https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems/actions/runs/37604919875) | 22.361 | 0.7149 | 0.8740 |
+| [3](https://github.com/khangduong2k4het-netizen/K4-L3L4-Track2-Day21-DuongDatKhang-2A202602624-CI-CD-for-AI-Systems/actions/runs/37607774898) | 44.722 | 0.7354 | 0.8820 |
 
-**Nhận xét:** Kết quả cục bộ 0.7149/0.8740 thuộc Bước 1, không thay cho kết quả Actions của Bước 2. Chưa thể kết luận tăng/giảm vì chưa chạy Bước 3; bảng sẽ được cập nhật từ artifacts thật của hai lần chạy.
+Giữ nguyên tham số và holdout, Bước 3 thay đổi F1 +0.0205, accuracy +0.0080; thêm dữ liệu không bảo đảm mọi chỉ số cùng tăng. Commit 9443ae8d chỉ cập nhật con trỏ DVC, tự kích hoạt đủ bốn jobs xanh và triển khai lên EC2 qua SSM. Số liệu lấy từ report artifact của từng run; bằng chứng và hạn chế ảnh được ghi trong checklist nộp bài.

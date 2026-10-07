@@ -4,6 +4,17 @@ Course: AIInAction - VinUni
 Buổi: Day 21 - CI/CD cho AI Systems
 Khoá: K4
 
+## Bài thực hành đã triển khai
+
+Dương Đạt Khang — MSSV **2A202602624**. Bài dùng AWS S3, EC2 `t3.small`,
+GitHub OIDC và SSM. [Báo cáo và bằng chứng thực tế](nop-bai/README.md) có ba thí
+nghiệm MLflow, hai lần chạy CI/CD thành công và bằng chứng Quality Gate chặn model yếu.
+Bước 3 tự chạy từ commit dữ liệu, đạt **F1 0.7354 / Accuracy 0.8820**.
+
+Trên Windows, dùng môi trường riêng **Python 3.11.9** trong `.venv311` với các
+dependencies đã pin. Python 3.13 không phù hợp với scikit-learn 1.4.2 trong bài này.
+Hướng dẫn triển khai: [deploy/README-aws.md](deploy/README-aws.md).
+
 ---
 
 ## Mục Tiêu Học Tập

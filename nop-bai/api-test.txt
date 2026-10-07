@@ -1,0 +1,14 @@
+REAL CURL API TEST TRANSCRIPT
+Recorded: 2026-10-07T17:35:22.478822+07:00
+EC2 instance: i-0a9249b9b954a67f6
+
+outputs/score-request.json:
+{"features": [60, 2, 5, 2, 4, 0, 1, 0, 0, 45]}
+
+curl.exe --fail --silent --show-error --max-time 15 http://18.142.137.123:8080/healthz
+{"status":"ok"}
+Exit code: 0
+
+curl.exe --fail --silent --show-error --max-time 15 -X POST http://18.142.137.123:8080/score -H "Content-Type: application/json" --data-binary @outputs/score-request.json
+{"prediction":0,"label":"thu_nhap_thap"}
+Exit code: 0
