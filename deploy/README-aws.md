@@ -1,5 +1,12 @@
 # Bước 2 trên AWS: S3, EC2 và GitHub Actions
 
+## Triển khai thực tế của bài này
+
+Bucket private `income-lab-406382424864-ap-southeast-1`, EC2 `i-0a9249b9b954a67f6`
+loại `t3.small` tại Singapore (`ap-southeast-1`). API ở `http://18.142.137.123:8080`.
+GitHub đã có ba secrets và hai variables cho SSM/OIDC bên dưới; không lưu SSH private
+key lên GitHub. Xem [kết quả và bằng chứng](../nop-bai/README.md).
+
 Pipeline dùng Python 3.11. EC2 chỉ chạy API; huấn luyện chạy trên GitHub Actions.
 `src/serve.py` tải model từ `s3://BUCKET/artifacts/current/model.joblib` khi
 khởi động. DVC lưu dữ liệu dưới `s3://BUCKET/dvc/`.
@@ -102,6 +109,11 @@ NaN, infinity và giá trị không hợp lệ. Release mới upload model đư�
 vào `artifacts/current/model.joblib`, upload bundle code lên S3, gọi SSM để tải
 bundle trên EC2 và restart service.
 Nó thử lại health check rồi kiểm tra cả `/score`.
+
+Push vào `main` tự kích hoạt pipeline khi thay đổi dữ liệu `.dvc`, mã nguồn,
+tests, params, dependencies hoặc cấu hình triển khai/workflow. Commit chỉ cập nhật
+báo cáo và ảnh không huấn luyện lại. Với repository fork, cần bật Actions ở cấp
+repository; trạng thái workflow `active` riêng lẻ chưa đủ trong lần cấu hình này.
 
 Để chứng minh gate chặn mô hình yếu, chạy workflow thủ công với
 `training_preset=weak-model-demo` khi vẫn dùng batch 1. Train chạy thật bộ

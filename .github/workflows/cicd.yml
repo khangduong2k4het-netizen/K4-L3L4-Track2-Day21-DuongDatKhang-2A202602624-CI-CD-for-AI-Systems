@@ -3,6 +3,16 @@ name: Income Model CI/CD
 on:
   push:
     branches: [main]
+    paths:
+      - 'data/**.dvc'
+      - '.dvc/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'params.yaml'
+      - 'requirements*.txt'
+      - 'deploy/**'
+      - '.github/workflows/**'
+      - '.github/scripts/**'
   workflow_dispatch:
     inputs:
       training_preset:
