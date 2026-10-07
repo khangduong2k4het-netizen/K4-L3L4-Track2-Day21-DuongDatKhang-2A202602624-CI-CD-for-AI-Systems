@@ -1,0 +1,5 @@
+[core]
+    remote = labstore
+['remote "labstore"']
+    url = s3://income-lab-406382424864-ap-southeast-1/dvc
+    region = ap-southeast-1
