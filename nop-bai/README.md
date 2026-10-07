@@ -36,7 +36,7 @@ Commit dữ liệu: [9443ae8d](https://github.com/khangduong2k4het-netizen/K4-L3
 ## Triển khai AWS
 
 - Region: `ap-southeast-1`; EC2 `t3.small`: `i-0a9249b9b954a67f6`.
-- API: `http://18.142.137.123:8080`.
+- API đã kiểm tra trước khi dừng: `http://18.142.137.123:8080`; hiện tạm ngừng phục vụ.
 - Bucket private: `income-lab-406382424864-ap-southeast-1`.
 - Pipeline dùng GitHub OIDC, triển khai SSM; API tải model bằng instance role.
 - Model chỉ được xuất bản sau Quality Gate. Không thực hiện bonus.
@@ -50,5 +50,5 @@ chạy thật, **không phải ảnh cửa sổ terminal**; file api-test.txt gi
 Cần chụp bổ sung hai chi tiết này nếu người chấm yêu cầu đúng hình thức trong
 [quy định ảnh](anh-chup-man-hinh/README.md). Không ghép thanh địa chỉ hoặc giả giao diện terminal.
 
-EC2 đang hoạt động để kiểm tra bài; EC2/EBS/Public IPv4 tiếp tục tiêu hao AWS credit.
-Stop EC2 khi không còn cần API, và dọn tài nguyên sau khi chấm bài.
+EC2 đã được tạm dừng (stopped) sau khi kiểm tra xong để tiết kiệm AWS credit (chi tiết trong [ec2-status.json](ec2-status.json)).
+Có thể start lại khi cần kiểm tra API thực tế và dọn tài nguyên sau khi chấm bài.

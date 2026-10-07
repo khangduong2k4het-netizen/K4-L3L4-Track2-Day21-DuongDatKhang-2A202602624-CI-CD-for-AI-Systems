@@ -1,5 +1,5 @@
 REAL CURL API TEST TRANSCRIPT
-Recorded: 2026-10-07T17:35:22.478822+07:00
+Recorded: 2026-10-07T17:41:47.621447+07:00
 EC2 instance: i-0a9249b9b954a67f6
 
 outputs/score-request.json:

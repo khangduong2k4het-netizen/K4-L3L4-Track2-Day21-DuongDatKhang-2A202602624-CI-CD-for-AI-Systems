@@ -87,7 +87,11 @@
     "instance_id": "i-0a9249b9b954a67f6",
     "instance_type": "t3.small",
     "bucket": "income-lab-406382424864-ap-southeast-1",
-    "api_base_url": "http://18.142.137.123:8080"
+    "api_base_url": "http://18.142.137.123:8080",
+    "state": "stopped",
+    "current_public_ip": null,
+    "stopped_verified_at": "2026-10-07T17:43:06.544528+07:00",
+    "api_base_url_is_historical": true
   },
   "evidence_limitations": [
     "Playwright page screenshots omit the browser address bar.",

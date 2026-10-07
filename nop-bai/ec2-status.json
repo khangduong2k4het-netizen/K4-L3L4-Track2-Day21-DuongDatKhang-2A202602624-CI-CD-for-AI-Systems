@@ -1,0 +1,14 @@
+{
+  "verified_at": "2026-10-07T17:43:06.544528+07:00",
+  "account": "406382424864",
+  "region": "ap-southeast-1",
+  "instance_id": "i-0a9249b9b954a67f6",
+  "state": "stopped",
+  "instance_type": "t3.small",
+  "public_ip": null,
+  "previous_public_ip": "18.142.137.123",
+  "volumes_retained": [
+    "vol-00851bafa2fb6125d"
+  ],
+  "reason": "Stopped at user request to reduce AWS credit usage."
+}
